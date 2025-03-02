@@ -1,0 +1,78 @@
+# URL Shortener Service - Complete Documentation
+
+## Overview
+The URL Shortener Service allows users to shorten long URLs into unique short links. It also supports redirection from short URLs back to the original URLs.
+
+## Features
+1. **Shorten a URL**: Submit a long URL and get a short unique URL.
+2. **Redirection**: Enter the short URL to be redirected to the original URL.
+3. **Unique URLs**: If the same long URL is submitted again, the same short URL is returned.
+4. **Validation**: Ensures that the entered URL is valid.
+5. **Optional Features**:
+   - Track the number of times a short URL is accessed.
+   - Set expiration time for short URLs.
+
+## How It Works
+1. **User Input**: The user submits a long URL.
+2. **Short URL Generation**: The service generates a unique short code.
+3. **Storage**: The short code and long URL are stored in Redis.
+4. **Redirection**: When a user accesses the short URL, they are redirected to the long URL.
+
+## API Endpoints
+
+### 1. Shorten a URL
+- **Endpoint**: `POST /shorten`
+- **Request Body**:
+  ```json
+  {
+    "long_url": "https://example.com"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "short_url": "http://127.0.0.1:5000/abc123"
+  }
+  ```
+
+### 2. Redirect to Original URL
+- **Endpoint**: `GET /{short_code}`
+- **Response**:
+  - **302 Found**: Redirects to the original URL.
+  - **404 Not Found**: If the short code does not exist.
+
+## Validating URLs
+- URLs should start with `http://` or `https://`.
+- Invalid URL Example: `htp:/example.com` (incorrect format).
+
+## Setting Up the Project
+
+### 1. Install Dependencies
+- Install Python and Flask:
+  ```sh
+  pip install flask redis
+  ```
+- Install and start Redis:
+  ```sh
+  redis-server
+  ```
+
+### 2. Run the Application
+```sh
+python app.py
+```
+
+### 3. Test the API with cURL or Postman
+- Example cURL command to shorten a URL:
+  ```sh
+  curl -X POST -H "Content-Type: application/json" -d '{"long_url": "https://example.com"}' http://127.0.0.1:5000/shorten
+  ```
+
+## Redis Storage Schema
+- **Short URL Storage**: `short_code -> long_url`
+- **Access Count**: `count:short_code -> integer`
+
+## Conclusion
+This URL Shortener Service provides a simple yet powerful way to shorten URLs and track access counts. It is built using Flask and Redis for efficient storage and retrieval.
+
+---

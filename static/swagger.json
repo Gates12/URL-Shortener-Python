@@ -1,0 +1,107 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "URL Shortener API",
+        "description": "API to shorten and redirect URLs",
+        "version": "1.0.0"
+    },
+    "host": "127.0.0.1:5000",
+    "schemes": ["http"],
+    "paths": {
+        "/shorten": {
+            "post": {
+                "summary": "Shorten a URL",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "long_url": {
+                                    "type": "string",
+                                    "example": "https://example.com"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Shortened URL",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "short_url": {
+                                    "type": "string",
+                                    "example": "http://127.0.0.1:5000/abc123"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid URL"
+                    }
+                }
+            }
+        },
+        "/{short_code}": {
+            "get": {
+                "summary": "Redirect to the original URL",
+                "parameters": [
+                    {
+                        "name": "short_code",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "302": {
+                        "description": "Redirect to original URL"
+                    },
+                    "404": {
+                        "description": "Short URL not found"
+                    }
+                }
+            }
+        },
+        "/access_count/{short_code}": {
+            "get": {
+                "summary": "Get access count for a short URL",
+                "description": "Returns the number of times a short URL has been accessed.",
+                "parameters": [
+                    {
+                        "name": "short_code",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "The short code for which access count is retrieved"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "short_code": {
+                                    "type": "string",
+                                    "example": "abc123"
+                                },
+                                "access_count": {
+                                    "type": "integer",
+                                    "example": 10
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Short code not found"
+                    }
+                }
+            }
+        }
+    }
+}
